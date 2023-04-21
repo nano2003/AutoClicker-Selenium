@@ -4,43 +4,68 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.chrome.options import Options
 import time
+from selenium.webdriver.common.action_chains import ActionChains
+from functions import *
 
+#   ---------all functions code written in functions.py file--------------
+
+PATH="E:\Webdriver\chromedriver" #PATH need to be changed to the new path of the webdriver
 options = Options()
 options.add_argument('--ignore-certificate-errors')
 
-Driver=webdriver.Chrome("E:\Webdriver\chromedriver",options=options)
-Driver.get("https://cps-tester.com/")
 
-Driver.implicitly_wait(10)
-
-clicker=Driver.find_element(By.CSS_SELECTOR,".js-clicks")
-TimerCount=Driver.find_element(By.CSS_SELECTOR,".number_timer")
-RestartButton=Driver.find_element(By.CSS_SELECTOR,".js-try-again")
-
-TimerCount=float(TimerCount.text)
-TimerCount=int(TimerCount)
 cmd=True
-
-
 while(cmd):
-    #replace while methode with try and excpet
-    try:
-        while(TimerCount > 0):
-            clicker.click()
-    except :
-
-        print("done")
-        score=Driver.find_element(By.CSS_SELECTOR,".js-score")
-        cps=Driver.find_element(By.CSS_SELECTOR,".js-speed")
+    
+    #ProgramType=input("1/Mouse Clicker (cps auto-clicker) | 2/Space clicker(space auto-clicker): ")
+    """
+    while ProgramType not in (1,2):
+        ProgramType=input("1/Mouse Clicker (cps auto-clicker) | 2/Space clicker(space auto-clicker)")
+    """
+    ProgramType=2
+    Driver=webdriver.Chrome(PATH,options=options)
+    if(ProgramType == 1):
+        Driver.get("https://cps-tester.com/")
+        Driver.implicitly_wait(10)
         
-        if(input(f"------------------------------------ \n     Score: {score.text} \n     CPS: {cps.text} \n     Restart: [Y/N]: \n").upper() == "Y"):
-            cmd=True
-            Driver.find_element(By.CSS_SELECTOR,".js-try-again").click()
-        else:
-            cmd=False
-            Driver.quit()
-        print("------------------------------------")
+        clicker=Driver.find_element(By.CSS_SELECTOR,".js-clicks")
+        TimerCount=Driver.find_element(By.CSS_SELECTOR,".number_timer")
+        TimerCount=float(TimerCount.text)
+        TimerCount=int(TimerCount)
+        
+        MouseClicker(Driver,TimerCount,clicker,0)
+    
+    
+    elif(ProgramType == 2):
+        Driver.get("https://spacebar-counter.com/")
+        TimerCount=Driver.find_element(By.CSS_SELECTOR,".number_timer")
+        TimerCount=float(TimerCount.text)
 
-    print("Quitting")
+        SpaceClicker(Driver,TimerCount,0)
+    
+    elif(ProgramType == 0):
+        cmd = False
+
+    
+    
+    #condition to continue or leave the loop
+    #chossing the timelapse
 
 
+
+
+        print("----Quitting Program----")
+
+
+
+
+
+
+
+
+
+
+
+
+
+# MAX SPS: 53.80 (depends on the connection)
